@@ -1,6 +1,5 @@
 package com.novare.wordcloud.service;
 
-
 import com.novare.wordcloud.payload.WordCloudData;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -11,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WordCloudService {
@@ -25,34 +22,41 @@ public class WordCloudService {
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(feedUrl));
 
-            // Extract and process feed entries
             List<String> allWords = new ArrayList<>();
             List<SyndEntry> entries = feed.getEntries();
             for (SyndEntry entry : entries) {
-                if (entry.getDescription() != null) {
-                    String entryText = entry.getDescription().getValue();
+                if (entry.getTitleEx() != null) {
+                    String entryText = entry.getTitleEx().getValue();
                     List<String> words = processEntryText(entryText);
                     allWords.addAll(words);
                 }
             }
 
-            // Count word frequencies
-            Map<String, Integer> wordFrequencies = countWordFrequencies(allWords);
+            // Remove stop words
+            List<String> filteredWords = filterStopWords(allWords);
 
-            // Filter words based on the threshold
-            Map<String, Integer> filteredWords = filterWordsByThreshold(wordFrequencies, wordFrequencyThreshold);
+            // Word frequencies
+            Map<String, Integer> wordFrequencies = countWordFrequencies(filteredWords);
 
-            return new WordCloudData(filteredWords);
+            // Threshold
+            Map<String, Integer> filteredWordsByThreshold = filterWordsByThreshold(wordFrequencies, wordFrequencyThreshold);
+
+            return new WordCloudData(filteredWordsByThreshold);
         } catch (IOException | FeedException e) {
-            // Handle exceptions appropriately
             throw new RuntimeException("Error fetching or parsing the RSS feed.", e);
         }
     }
 
     private static List<String> processEntryText(String text) {
-        // Implement tokenization and text processing logic here
-        // For simplicity, you can split the text by whitespace
-        return List.of(text.split("\\s+"));
+        // Split the text by whitespace
+        return Arrays.asList(text.split("\\s+"));
+    }
+
+    private static List<String> filterStopWords(List<String> words) {
+        List<String> stopWords = List.of("and", "or", "the", "a", "in", "for", "is", "to", "on");
+        return words.stream()
+                .filter(word -> !stopWords.contains(word.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     private static Map<String, Integer> countWordFrequencies(List<String> words) {

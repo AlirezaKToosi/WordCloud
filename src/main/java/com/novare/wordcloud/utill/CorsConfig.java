@@ -11,8 +11,8 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Allow all paths, you can restrict it if needed
-                .allowedOrigins("http://localhost:3000") // Replace with the actual URL of your React frontend
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }

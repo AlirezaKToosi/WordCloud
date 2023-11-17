@@ -9,10 +9,12 @@ public class WordCloudData {
         this.wordFrequencies = wordFrequencies;
     }
 
+    // unused content -3
     public Map<String, Integer> getWordFrequencies() {
         return wordFrequencies;
     }
 
+    // unused content -3
     public void setWordFrequencies(Map<String, Integer> wordFrequencies) {
         this.wordFrequencies = wordFrequencies;
     }

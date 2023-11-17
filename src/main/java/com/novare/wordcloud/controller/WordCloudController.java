@@ -17,6 +17,7 @@ public class WordCloudController {
         String rssFeedUrl = request.getRssFeedUrl();
         int wordFrequencyThreshold = request.getWordFrequencyThreshold();
         WordCloudData wordCloudData = WordCloudService.generateWordCloud(rssFeedUrl, wordFrequencyThreshold);
+        //
         return ResponseEntity.ok(wordCloudData);
     }
 }

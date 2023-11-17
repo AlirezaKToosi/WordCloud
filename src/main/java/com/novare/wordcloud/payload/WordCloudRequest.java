@@ -12,10 +12,12 @@ public class WordCloudRequest {
         return wordFrequencyThreshold;
     }
 
+    // unused content -3
     public void setRssFeedUrl(String rssFeedUrl) {
         this.rssFeedUrl = rssFeedUrl;
     }
 
+    // unused content -3
     public void setWordFrequencyThreshold(int wordFrequencyThreshold) {
         this.wordFrequencyThreshold = wordFrequencyThreshold;
     }
